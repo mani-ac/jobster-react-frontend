@@ -3,7 +3,7 @@ import { FaBriefcase, FaCalendarAlt, FaLocationArrow } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Wrapper from "../assets/wrappers/Job";
-import { deleteJob } from "../features/job/jobSlice";
+import { deleteJob, setEditJob } from "../features/job/jobSlice";
 import JobInfo from "./JobInfo";
 
 const Job = ({
@@ -40,7 +40,16 @@ const Job = ({
               to="/add-job"
               className="btn edit-btn"
               onClick={() => {
-                console.log("edit job");
+                dispatch(
+                  setEditJob({
+                    editJobId: _id,
+                    position,
+                    company,
+                    jobLocation,
+                    jobType,
+                    status,
+                  })
+                );
               }}
             >
               Edit

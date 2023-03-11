@@ -1,49 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import customFetch from "../../utils/axios";
 import { getUserFromLocalStorage } from "../../utils/localStorage";
-import { getAllJobs, hideLoading, showLoading } from "../allJobs/allJobsSlice";
-import { logoutUser } from "../user/userSlice";
-
-export const createJob = createAsyncThunk(
-  "job/createJob",
-  async (job, thunkApi) => {
-    try {
-      const res = await customFetch.post("/jobs", job, {
-        headers: {
-          authorization: `Bearer ${thunkApi.getState().user.user.token}`,
-        },
-      });
-      thunkApi.dispatch(clearValues());
-      return res.data;
-    } catch (error) {
-      if (error.response.status === 401) {
-        thunkApi.dispatch(logoutUser());
-        return thunkApi.rejectWithValue("Unauthorized! Logging out...");
-      }
-      return thunkApi.rejectWithValue(error.response.data.msg);
-    }
-  }
-);
-
-export const deleteJob = createAsyncThunk(
-  "job/deleteJob",
-  async (jobId, thunkApi) => {
-    thunkApi.dispatch(showLoading());
-    try {
-      const res = await customFetch.delete(`/jobs/${jobId}`, {
-        headers: {
-          authorization: `Bearer ${thunkApi.getState().user.user.token}`,
-        },
-      });
-      thunkApi.dispatch(getAllJobs());
-      return res.data.msg;
-    } catch (error) {
-      thunkApi.dispatch(hideLoading());
-      thunkApi.rejectWithValue(error.response.data.msg);
-    }
-  }
-);
+import { createJobThunk, deleteJobThunk, editJobThunk } from "./jobThunk";
 
 const initialState = {
   isLoading: false,
@@ -58,6 +16,12 @@ const initialState = {
   editJobId: "",
 };
 
+export const createJob = createAsyncThunk("job/createJob", createJobThunk);
+
+export const deleteJob = createAsyncThunk("job/deleteJob", deleteJobThunk);
+
+export const editJob = createAsyncThunk("job/editjob", editJobThunk);
+
 const jobSlice = createSlice({
   name: "job",
   initialState,
@@ -70,6 +34,9 @@ const jobSlice = createSlice({
         ...initialState,
         jobLocation: getUserFromLocalStorage()?.location || "",
       };
+    },
+    setEditJob: (state, { payload }) => {
+      return { ...state, isEditing: true, ...payload };
     },
   },
   extraReducers: {
@@ -90,9 +57,20 @@ const jobSlice = createSlice({
     [deleteJob.rejected]: (state, { payload }) => {
       toast.error(payload);
     },
+    [editJob.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [editJob.fulfilled]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.success("Job updated..");
+    },
+    [editJob.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
+    },
   },
 });
 
-export const { handleChange, clearValues } = jobSlice.actions;
+export const { handleChange, clearValues, setEditJob } = jobSlice.actions;
 
 export default jobSlice.reducer;
