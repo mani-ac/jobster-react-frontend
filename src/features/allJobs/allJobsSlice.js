@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import customFetch from "../../utils/axios";
+import { getAllJobsThunk, showStatsThunk } from "./allJobsThunk";
 
 const initialFiltersState = {
   search: "",
@@ -23,33 +23,10 @@ const initialState = {
 
 export const getAllJobs = createAsyncThunk(
   "allJobs/getAllJobs",
-  async (_, thunkApi) => {
-    try {
-      let url = "/jobs";
-
-      const res = await customFetch.get(url, {
-        headers: {
-          authorization: `Bearer ${thunkApi.getState().user.user.token}`,
-        },
-      });
-      return res.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(error.response.data.msg);
-    }
-  }
+  getAllJobsThunk
 );
 
-export const showStats = createAsyncThunk(
-  "allJobs/showStats",
-  async (_, thunkApi) => {
-    try {
-      const res = await customFetch.get("/jobs/stats");
-      return res.data;
-    } catch (error) {
-      thunkApi.rejectWithValue(error.response.data.msg);
-    }
-  }
-);
+export const showStats = createAsyncThunk("allJobs/showStats", showStatsThunk);
 
 const allJobsSlice = createSlice({
   name: "allJobs",
@@ -62,12 +39,16 @@ const allJobsSlice = createSlice({
       state.isLoading = false;
     },
     handleChange: (state, { payload: { name, value } }) => {
-      // state.page = 1;
+      state.page = 1;
       state[name] = value;
     },
     clearFilter: (state) => {
       return { ...state, ...initialFiltersState };
     },
+    changePage: (state, { payload }) => {
+      state.page = payload;
+    },
+    clearAllJobsState: () => initialState,
   },
   extraReducers: {
     [getAllJobs.pending]: (state) => {
@@ -98,7 +79,13 @@ const allJobsSlice = createSlice({
   },
 });
 
-export const { showLoading, hideLoading, handleChange, clearFilter } =
-  allJobsSlice.actions;
+export const {
+  showLoading,
+  hideLoading,
+  handleChange,
+  clearFilter,
+  changePage,
+  clearAllJobsState,
+} = allJobsSlice.actions;
 
 export default allJobsSlice.reducer;
