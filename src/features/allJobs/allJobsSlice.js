@@ -50,32 +50,60 @@ const allJobsSlice = createSlice({
     },
     clearAllJobsState: () => initialState,
   },
-  extraReducers: {
-    [getAllJobs.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [getAllJobs.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.jobs = payload.jobs;
-      state.totalJobs = payload.totalJobs;
-      state.numOfPages = payload.numOfPages;
-    },
-    [getAllJobs.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
-    [showStats.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [showStats.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.stats = payload.defaultStats;
-      state.monthlyApplications = payload.monthlyApplications;
-    },
-    [showStats.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
+  // extraReducers: {
+  //   [getAllJobs.pending]: (state) => {
+  //     state.isLoading = true;
+  //   },
+  //   [getAllJobs.fulfilled]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     state.jobs = payload.jobs;
+  //     state.totalJobs = payload.totalJobs;
+  //     state.numOfPages = payload.numOfPages;
+  //   },
+  //   [getAllJobs.rejected]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     toast.error(payload);
+  //   },
+  //   [showStats.pending]: (state) => {
+  //     state.isLoading = true;
+  //   },
+  //   [showStats.fulfilled]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     state.stats = payload.defaultStats;
+  //     state.monthlyApplications = payload.monthlyApplications;
+  //   },
+  //   [showStats.rejected]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     toast.error(payload);
+  //   },
+  // },
+  extraReducers(builder) {
+    builder
+      .addCase(getAllJobs.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllJobs.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.jobs = payload.jobs;
+        state.totalJobs = payload.totalJobs;
+        state.numOfPages = payload.numOfPages;
+      })
+      .addCase(getAllJobs.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(showStats.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(showStats.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.stats = payload.defaultStats;
+        state.monthlyApplications = payload.monthlyApplications;
+      })
+      .addCase(showStats.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      });
   },
 });
 

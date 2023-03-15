@@ -57,52 +57,100 @@ const userSlice = createSlice({
       }
     },
   },
-  extraReducers: {
-    [registerUser.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [registerUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
-      state.isLoading = false;
-      state.user = user;
-      addUserToLocalStorage(user);
-      toast.success(`Hello there ${user.name}`);
-    },
-    [registerUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
-    [loginUser.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [loginUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
-      state.isLoading = false;
-      state.user = user;
-      addUserToLocalStorage(user);
-      toast.success(`Welcome back ${user.name}`);
-    },
-    [loginUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
-    [updateUser.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [updateUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
-      state.user = user;
-      state.isLoading = false;
-      addUserToLocalStorage(user);
-      toast.success("user updated");
-    },
-    [updateUser.rejected]: (state, { payload }) => {
-      state.isLoading = false;
-      toast.error(payload);
-    },
-    [clearStore.rejected]: () => {
-      toast.error("There was an error...");
-    },
+  // extraReducers: {
+  //   [registerUser.pending]: (state) => {
+  //     state.isLoading = true;
+  //   },
+  //   [registerUser.fulfilled]: (state, { payload }) => {
+  //     const { user } = payload;
+  //     state.isLoading = false;
+  //     state.user = user;
+  //     addUserToLocalStorage(user);
+  //     toast.success(`Hello there ${user.name}`);
+  //   },
+  //   [registerUser.rejected]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     toast.error(payload);
+  //   },
+  //   [loginUser.pending]: (state) => {
+  //     state.isLoading = true;
+  //   },
+  //   [loginUser.fulfilled]: (state, { payload }) => {
+  //     const { user } = payload;
+  //     state.isLoading = false;
+  //     state.user = user;
+  //     addUserToLocalStorage(user);
+  //     toast.success(`Welcome back ${user.name}`);
+  //   },
+  //   [loginUser.rejected]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     toast.error(payload);
+  //   },
+  //   [updateUser.pending]: (state) => {
+  //     state.isLoading = true;
+  //   },
+  //   [updateUser.fulfilled]: (state, { payload }) => {
+  //     const { user } = payload;
+  //     state.user = user;
+  //     state.isLoading = false;
+  //     addUserToLocalStorage(user);
+  //     toast.success("user updated");
+  //   },
+  //   [updateUser.rejected]: (state, { payload }) => {
+  //     state.isLoading = false;
+  //     toast.error(payload);
+  //   },
+  //   [clearStore.rejected]: () => {
+  //     toast.error("There was an error...");
+  //   },
+  // },
+  extraReducers: (builder) => {
+    builder
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(registerUser.fulfilled, (state, { payload }) => {
+        const { user } = payload;
+        state.isLoading = false;
+        state.user = user;
+        addUserToLocalStorage(user);
+        toast.success(`Hello there ${user.name}`);
+      })
+      .addCase(registerUser.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, { payload }) => {
+        const { user } = payload;
+        state.isLoading = false;
+        state.user = user;
+        addUserToLocalStorage(user);
+        toast.success(`Welcome back ${user.name}`);
+      })
+      .addCase(loginUser.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, { payload }) => {
+        const { user } = payload;
+        state.user = user;
+        state.isLoading = false;
+        addUserToLocalStorage(user);
+        toast.success("user updated");
+      })
+      .addCase(updateUser.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        toast.error(payload);
+      })
+      .addCase(clearStore.rejected, () => {
+        toast.error("There was an error...");
+      });
   },
 });
 
